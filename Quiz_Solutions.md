@@ -1,56 +1,101 @@
 ## Question 1 ##
-# install.packages("nlme")
-# install.packages("lattice") 
-library(nlme)
-library(lattice)
+colClasses=c("character", "character", rep("numeric",7))
+df <- read.csv("household_power_consumption.txt"
+               , sep = ";"
+               , colClasses = colClasses
+               , na.strings = '?'
+               , )
 
-plot <- xyplot(weight ~ Time | Diet,BodyWeight)
-class(plot)
-# "trellis"
+df[, 'Date'] <- dmy(df[, 'Date'])
+df[, 'Time'] <- hms(df[, 'Time'])
+df <- subset(df, Date >= "2007-02-01" & Date <= "2007-02-02")
+
+![image](https://user-images.githubusercontent.com/82023279/200479039-c8a3904d-d2c1-4c28-8532-328a00486ccb.png)
+
 
 ## Question 2 ##
-library(nlme)
-library(lattice)
-xyplot(weight ~ Time | Diet, BodyWeight)
-![q2q2](https://user-images.githubusercontent.com/82023279/200478424-1ce73aaf-3a43-4c6b-8ae6-fd94ada81646.png)
+colClasses=c("character", "character", rep("numeric",7))
+df <- read.csv("household_power_consumption.txt"
+               , sep = ";"
+               , colClasses = colClasses
+               , na.strings = '?'
+               , )
+
+df[, 'Date'] <- dmy(df[, 'Date'])
+df[, 'Time'] <- hms(df[, 'Time'])
+df <- subset(df, Date >= "2007-02-01" & Date <= "2007-02-02")
+
+![image](https://user-images.githubusercontent.com/82023279/200479185-f51775b4-4496-411d-92de-389d516e6f1b.png)
 
 
 ## Question 3 ##
-panel.lmline()
-panel.abline()
+colClasses=c("character", "character", rep("numeric",7))
+df <- read.csv("household_power_consumption.txt"
+               , sep = ";"
+               , colClasses = colClasses
+               , na.strings = '?'
+               , )
+
+df[, 'Date'] <- dmy(df[, 'Date'])
+df[, 'Time'] <- hms(df[, 'Time'])
+df <- subset(df, Date >= "2007-02-01" & Date <= "2007-02-02")
+
+df[,'Datetime'] <- df$Date + df$Time
+![image](https://user-images.githubusercontent.com/82023279/200479799-f2339256-02df-4703-ad9a-f43cf2c8c2b9.png)
+
 
 ## Question 4 ##
-library(lattice)
-library(datasets)
-data(airquality)
-p <- xyplot(Ozone ~ Wind | factor(Month), data = airquality)
+colClasses=c("character", "character", rep("numeric",7))
+df <- read.csv("household_power_consumption.txt"
+               , sep = ";"
+               , colClasses = colClasses
+               , na.strings = '?'
+               , )
 
-## Question 5 ##
-trellis.par.set()
+df[, 'Date'] <- dmy(df[, 'Date'])
+df[, 'Time'] <- hms(df[, 'Time'])
+df <- subset(df, Date >= "2007-02-01" & Date <= "2007-02-02")
 
-## Question 6 ##
-the Grammar of Graphics developed by Leland Wilkinson
+# Plot 4
 
-## Question 7 ##
-library(datasets)
-data(airquality)
-airquality = transform(airquality, Month = factor(Month))
-qplot(Wind, Ozone, data = airquality, facets = . ~ Month)
-![q2q7](https://user-images.githubusercontent.com/82023279/200478583-57e98fb0-86b3-41f8-9e6f-2c960e2a5b93.png)
+df[,'Datetime'] <- df$Date + df$Time
+
+png("plot4.png", width=480, height=480)
+
+par(mfrow=c(2,2))
+
+with(df, plot(Datetime, Global_active_power
+              , type='l'
+              , xlab=""
+              , ylab="Global Active Power"))
+
+with(df, plot(Datetime, Voltage
+              , type='l'
+              , xlab="datetime"
+              , ylab="Voltage"))
+
+with(df, {
+  plot(Datetime, Sub_metering_1
+       , col="black"
+       , type='l'
+       , ylab="Energy sub metering"
+       , xlab="")
+  
+  lines(Datetime, Sub_metering_2, col="red")
+  lines(Datetime, Sub_metering_3, col="blue")
+  legend("topright"
+         , legend=c("Sub_metering_1", "Sub_metering_2", "Sub_metering_2")
+         , col=c("black", "red", "blue")
+         , lty= 1
+         , bty = "n")
+})
 
 
-## Question 8 ##
-a plotting object like point, line, or other shape
-
-## Question 9 ##
-library(ggplot2)
-library(ggplot2movies)
-g <- ggplot(movies, aes(votes, rating))
-print(g)
-ggplot does not yet know what type of layer to add to the plot.
+with(df, plot(Datetime, Global_reactive_power
+              , type='l'
+              , xlab="datetime"
+              , ylab="Global_reactive_power"))
 
 
-## Question 10 ##
-qplot(votes, rating, data = movies)
-qplot(votes, rating, data = movies) + geom_smooth()
-![q2q10](https://user-images.githubusercontent.com/82023279/200478616-5099bdf9-6157-4237-b691-90f98b82c422.png)
+dev.off()
+![image](https://user-images.githubusercontent.com/82023279/200479904-060efc6a-f9c8-4111-bbfd-f815118a2794.png)
